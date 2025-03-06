@@ -1,0 +1,37 @@
+name: Docker Build and Push
+
+on:
+  push:
+    paths:
+      - 'date-website/**'
+      - 'lorem-website/**'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Date Website
+        if: contains(github.event.head_commit.modified, 'date-website/')
+        run: |
+          cd date-website
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/date-website:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/date-website:latest
+
+      - name: Build and Push Lorem Website
+        if: contains(github.event.head_commit.modified, 'lorem-website/')
+        run: |
+          cd lorem-website
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lorem-website:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/lorem-website:latest

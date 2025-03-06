@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Date and Hostname</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const date = new Date().toLocaleDateString();
+            const hostname = window.location.hostname;
+            document.getElementById("date").textContent = date;
+            document.getElementById("hostname").textContent = hostname;
+        });
+    </script>
+</head>
+<body>
+    <h1>Current Date and Hostname</h1>
+    <p>Date: <span id="date"></span></p>
+    <p>Hostname: <span id="hostname"></span></p>
+</body>
+</html>
