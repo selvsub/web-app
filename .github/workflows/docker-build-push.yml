@@ -5,6 +5,7 @@ on:
     paths:
       - 'date-website/**'
       - 'lorem-website/**'
+  workflow_dispatch:
 
 jobs:
   build-and-push:
@@ -29,14 +30,12 @@ jobs:
           tar -xzf minrootfs/alpine-minirootfs.tar.gz -C minrootfs
 
       - name: Build and Push Date Website
-        if: contains(github.event.head_commit.modified, 'date-website/')
         run: |
           cd date-website
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/date-website:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/date-website:latest
 
       - name: Build and Push Lorem Website
-        if: contains(github.event.head_commit.modified, 'lorem-website/')
         run: |
           cd lorem-website
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lorem-website:latest .
