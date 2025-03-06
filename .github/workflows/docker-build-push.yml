@@ -5,6 +5,7 @@ on:
     paths:
       - 'date-website/**'
       - 'lorem-website/**'
+      - 'routing-service/**'
   workflow_dispatch:  # Allow manual triggering via GitHub UI
 
 jobs:
@@ -34,15 +35,22 @@ jobs:
           echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
 
       - name: Build and Push Date Website
-        if: contains(github.event.head_commit.modified, 'date-website/') || github.event_name == 'workflow_dispatch'
+        # if: contains(github.event.head_commit.modified, 'date-website/') || github.event_name == 'workflow_dispatch'
         run: |
           cd date-website
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/date-website:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }} .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/date-website:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }}
 
       - name: Build and Push Lorem Website
-        if: contains(github.event.head_commit.modified, 'lorem-website/') || github.event_name == 'workflow_dispatch'
+        # if: contains(github.event.head_commit.modified, 'lorem-website/') || github.event_name == 'workflow_dispatch'
         run: |
           cd lorem-website
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/lorem-website:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }} .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/lorem-website:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }}
+
+      - name: Build and Push Routing Service
+        # if: contains(github.event.head_commit.modified, 'routing-service/') || github.event_name == 'workflow_dispatch'
+        run: |
+          cd routing-service
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/routing-service:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }} .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/routing-service:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }}
