@@ -22,6 +22,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Download Alpine minirootfs
+        run: |
+          mkdir -p minrootfs
+          wget https://dl-cdn.alpinelinux.org/alpine/v3.21/releases/aarch64/alpine-minirootfs-3.21.3-aarch64.tar.gz -O minrootfs/alpine-minirootfs.tar.gz
+          tar -xzf minrootfs/alpine-minirootfs.tar.gz -C minrootfs
+
       - name: Build and Push Date Website
         if: contains(github.event.head_commit.modified, 'date-website/')
         run: |
