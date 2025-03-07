@@ -13,6 +13,8 @@ COPY nginx.conf /rootfs/nginx.conf
 FROM scratch
 COPY --from=builder /rootfs/ /
 
+RUN apk upgrade --no-cache
+
 RUN apk add --no-cache nginx 
 COPY --from=builder /rootfs/index.html /var/www/html/index.html
 COPY --from=builder /rootfs/nginx.conf /etc/nginx/nginx.conf
