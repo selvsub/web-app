@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   date-website:
-    image: ssubhash001/date-website:main-56fae4 # Replace with your Docker Hub image name
+    image: ssubhash001/date-website:main-f047da # Replace with your Docker Hub image name
     container_name: date-website
     ports:
       - "8081:80"
@@ -10,18 +10,18 @@ services:
       - app-network
 
   lorem-website:
-    image: ssubhash001/lorem-website:main-56fae4  # Replace with your Docker Hub image name
+    image: ssubhash001/lorem-website:main-f047da  # Replace with your Docker Hub image name
     container_name: lorem-website
     ports:
-      - "8082:80"
+      - "8082:81"
     networks:
       - app-network
 
   routing-service:
-    image: ssubhash001/routing-service:main-56fae4 # Replace with your Docker Hub image name
+    image: ssubhash001/routing-service:main-f047da # Replace with your Docker Hub image name
     container_name: routing-service
     ports:
-      - "8080:80"
+      - "8080:82"
     depends_on:
       - date-website
       - lorem-website
