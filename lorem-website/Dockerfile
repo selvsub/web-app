@@ -20,5 +20,5 @@ COPY --from=builder /rootfs/index.html /var/www/html/index.html
 COPY --from=builder /rootfs/nginx.conf /etc/nginx/nginx.conf
 
 USER nginx
-EXPOSE 80
+EXPOSE 81
 CMD ["nginx", "-g", "daemon off;"]
