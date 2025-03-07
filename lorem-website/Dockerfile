@@ -16,9 +16,8 @@ COPY --from=builder /rootfs/ /
 RUN apk update --no-check-certificate
 
 RUN apk add --no-check-certificate nginx 
-COPY --from=builder /rootfs/index.html /var/www/html/index.html
+COPY --from=builder /rootfs/index.html /var/www/html/sub/index.html
 COPY --from=builder /rootfs/nginx.conf /etc/nginx/nginx.conf
-
 USER nginx
-EXPOSE 81
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
