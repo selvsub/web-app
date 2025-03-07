@@ -5,22 +5,18 @@ RUN apk add --no-cache curl tar && \
     curl -L ${MINROOTFS_URL} -o alpine-minirootfs.tar.gz && \
     tar -xzf alpine-minirootfs.tar.gz && \
     rm alpine-minirootfs.tar.gz
-    COPY index.html /rootfs/var/www/html/index.html
-    COPY nginx.conf /rootfs/etc/nginx/nginx.conf
+
+COPY index.html /rootfs/index.html
+COPY nginx.conf /rootfs/nginx.conf
 
 
 FROM scratch
 COPY --from=builder /rootfs/ /
 
-RUN apk add --no-cache nginx && \
-    adduser -D -u 1000 nginxuser && \
-    mkdir -p /var/log/nginx /var/cache/nginx /var/lib/nginx/tmp /run/nginx && \
-    chown -R nginxuser:nginxuser /var/log/nginx /var/cache/nginx /var/lib/nginx /run/nginx /var/www/html && \
-    chmod -R 755 /var/log/nginx /var/cache/nginx /var/lib/nginx /run/nginx /var/www/html
+RUN apk add --no-cache nginx 
+COPY --from=builder /rootfs/index.html /var/www/html/index.html
+COPY --from=builder /rootfs/nginx.conf /etc/nginx/nginx.conf
 
-COPY --from=builder --chown=nginxuser:nginxuser /rootfs/var/www/html/index.html /var/www/html/index.html
-COPY --from=builder --chown=nginxuser:nginxuser /rootfs/etc/nginx/nginx.conf /etc/nginx/nginx.conf
-
-USER nginxuser
-
+USER nginx
 EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
