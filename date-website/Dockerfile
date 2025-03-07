@@ -1,5 +1,5 @@
 FROM alpine:latest AS builder
-ARG MINROOTFS_URL=https://dl-cdn.alpinelinux.org/alpine/v3.21/releases/aarch64/alpine-minirootfs-3.21.3-aarch64.tar.gz
+ARG MINROOTFS_URL=https://dl-cdn.alpinelinux.org/alpine/v3.21/releases/x86_64/alpine-minirootfs-3.21.3-x86_64.tar.gz
 WORKDIR /rootfs
 RUN apk add --no-cache curl tar && \
     curl -L ${MINROOTFS_URL} -o alpine-minirootfs.tar.gz && \
