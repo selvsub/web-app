@@ -3,19 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Current Date and Hostname</title>
+    <title>System Metrics</title>
+    <style>
+        /* Full-page background */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: url('background.png') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+
+        /* Centered content box */
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 50%;
+            min-width: 350px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #FFD700;
+        }
+    </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const date = new Date().toLocaleDateString();
-            const hostname = window.location.hostname;
-            document.getElementById("date").textContent = date;
-            document.getElementById("hostname").textContent = hostname;
+            document.getElementById("date").textContent = new Date().toLocaleDateString();
+            document.getElementById("hostname").textContent = window.location.hostname;
+
+            // Simulated system metrics (Replace with real data in a backend version)
+            document.getElementById("cpu").textContent = "Usage: 35%";
+            document.getElementById("memory").textContent = "Usage: 2.5 GB / 8 GB";
+            document.getElementById("disk").textContent = "Free Space: 120 GB / 500 GB";
         });
     </script>
 </head>
 <body>
-    <h1>Current Date and Hostname</h1>
-    <p>Date: <span id="date"></span></p>
-    <p>Hostname: <span id="hostname"></span></p>
+    <div class="container">
+        <h1>System Metrics</h1>
+        <p>Date: <span class="highlight" id="date"></span></p>
+        <p>Hostname: <span class="highlight" id="hostname"></span></p>
+        <p>CPU: <span class="highlight" id="cpu"></span></p>
+        <p>Memory: <span class="highlight" id="memory"></span></p>
+        <p>Disk: <span class="highlight" id="disk"></span></p>
+    </div>
 </body>
 </html>
