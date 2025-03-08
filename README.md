@@ -27,6 +27,6 @@ The app should be accessible at http://localhost:8080.
 ![System Metrics Output](images/sub.jpg)
 
 
-#### When you visit [http://localhost:8080/aaggsgsgs](http://localhost:8080/sshjss), you should see an output similar to the image below:
+#### When you visit [http://localhost:8080/aaggsgsgs](http://localhost:8080/aaggsgsgs), you should see an output similar to the image below:
 
 ![System Metrics Output](images/notfound.jpg)
