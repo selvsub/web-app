@@ -9,7 +9,7 @@ RUN apk add --no-cache curl tar && \
 
 COPY lorem.html /rootfs/index.html
 COPY nginx.conf /rootfs/nginx.conf
-COPY background.png /rootfs/background.png
+COPY background.jpg /rootfs/background.jpg
 
 
 FROM scratch
@@ -19,7 +19,7 @@ RUN apk update --no-check-certificate
 RUN apk add --no-check-certificate nginx 
 COPY --from=builder /rootfs/index.html /var/www/html/sub/index.html
 COPY --from=builder /rootfs/nginx.conf /etc/nginx/nginx.conf
-COPY --from=builder /rootfs/background.png /var/www/html/sub/background.png
+COPY --from=builder /rootfs/background.jpg /var/www/html/sub/background.jpg
 
 USER nginx
 EXPOSE 80
