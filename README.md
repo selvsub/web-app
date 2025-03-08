@@ -19,14 +19,14 @@ The app should be accessible at http://localhost:8080.
  
 #### When you visit [http://localhost:8080](http://localhost:8080), you should see an output similar to the image below:
 
-![System Metrics Output](images\website.jpg)
+![System Metrics Output](images/website.jpg)
 
 
 #### When you visit [http://localhost:8080/sub](http://localhost:8080/sub), you should see an output similar to the image below:
 
-![System Metrics Output](images\sub.jpg)
+![System Metrics Output](images/sub.jpg)
 
 
 #### When you visit [http://localhost:8080/aaggsgsgs](http://localhost:8080/sshjss), you should see an output similar to the image below:
 
-![System Metrics Output](images\notfound.jpg)
+![System Metrics Output](images/notfound.jpg)
