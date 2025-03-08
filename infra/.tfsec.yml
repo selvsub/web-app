@@ -1,0 +1,14 @@
+severity: 
+  - CRITICAL
+  - HIGH
+  - MEDIUM
+
+exclude:
+  - AWS002  # S3 Bucket ACL Allowed
+  - AWS012  # Resource has a public IP address
+
+checks:
+  - code: AWS017
+    severity: LOW
+
+soft-fail: false 

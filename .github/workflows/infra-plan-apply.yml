@@ -1,0 +1,125 @@
+name: Deploy Terraform Infrastructure
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+
+env:
+  AWS_REGION: "us-east-1"
+  TF_WORKING_DIR: "infra"
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+
+jobs:
+  terraform-plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    outputs:
+      plan-exists: ${{ steps.plan-check.outputs.plan_exists }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
+
+      - name: Initialize Terraform
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init
+
+      - name: Run TFLint
+        uses: reviewdog/action-tflint@v2
+        with:
+          working_directory: ${{ env.TF_WORKING_DIR }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          fail_on_error: true
+
+      - name: Run TFsec
+        uses: aquasecurity/tfsec-sarif-action@v0
+        with:
+          directory: ${{ env.TF_WORKING_DIR }}
+          output: ${{ env.TF_WORKING_DIR }}/tfsec.sarif
+          exit-code: 1 
+
+      - name: Upload TFsec Results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ env.TF_WORKING_DIR }}/tfsec.sarif
+
+      - name: Validate Terraform
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform validate
+
+      - name: Plan Terraform
+        id: plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform plan -out=tfplan
+
+      - name: Upload Terraform Plan Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: ${{ env.TF_WORKING_DIR }}/tfplan
+
+      - name: Check if Plan Exists
+        id: plan-check
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          if [ -f tfplan ]; then
+            echo "plan_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "plan_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+  terraform-apply:
+    name: Terraform Apply
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+    if: needs.terraform-plan.outputs.plan-exists == 'true'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download Terraform Plan Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+          path: ${{ env.TF_WORKING_DIR }}/
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
+
+      - name: Initialize Terraform
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init
+
+      - name: Apply Terraform
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform apply -auto-approve tfplan
