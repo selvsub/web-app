@@ -1,3 +1,7 @@
+locals {
+  ec2_user_data = templatefile("../../docker-compose.yaml", {})
+}
+
 resource "aws_launch_template" "app" {
   name_prefix   = "app-"
   image_id      = "ami-12345678"  # Replace with actual AMI ID
@@ -11,14 +15,13 @@ apt install -y docker.io
 systemctl start docker
 systemctl enable docker
 cat <<EOT > /home/ubuntu/docker-compose.yml
-${var.docker_compose}
+${local.ec2_user_data}
 EOT
 cd /home/ubuntu
 docker-compose up -d
 EOF
   )
 }
-
 resource "aws_autoscaling_group" "app" {
   min_size            = 1
   max_size            = 3

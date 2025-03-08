@@ -23,5 +23,5 @@ variable "key_name" {
 }
 
 variable "docker_compose" {
-  default = "version: '3'\nservices:\n  web:\n    image: nginx\n    ports:\n      - \"80:80\""
+  default = ""
 }
