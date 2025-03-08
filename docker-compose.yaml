@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   date-website:
     image: ssubhash001/date-website:main-7c6b86 # Replace with your Docker Hub image name
